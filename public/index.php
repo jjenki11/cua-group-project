@@ -107,7 +107,7 @@
                       foreach ($table as $value) {
                         if(empty($value))
                         {
-                          echo("<td tabindex='1'><span title=N/A>N/A</span></td>");
+                          echo("<td tabindex='1'><span title=N/A></span></td>");
                         } else {
                           echo("<td tabindex='1'><span title=$value>".$value."</span></td>");
                         } 
