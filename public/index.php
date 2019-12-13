@@ -100,13 +100,7 @@
                       $search_string.="\"field8\" = \"$zip\";";
                     }
 
-
                     $tablesquery = $db->query($search_string);
-
-                    //else {                      
-                      // BAD FILTER TYPE - redirect to all filter
-                    //  echo('<script>window.location.assign("http://li1923-168.members.linode.com/group1/index.php?type=all&filt=city")</script>');
-                    //}
 
                     while ($table = $tablesquery->fetchArray(SQLITE3_ASSOC)) {
                       echo("<tr>");
