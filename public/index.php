@@ -8,7 +8,7 @@
       <link rel="stylesheet" type="text/css" href="style.css">
     </head>
     <body style="background-color: white;">
-    <!-- start of nav bar -->
+    <!-- nav bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <a class="navbar-brand" href="#">Group #1</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,7 +26,7 @@
         </form>
       </div>
     </nav> 
-    <!-- end of nav bar -->
+    <!-- nav bar -->
 
     <div id="main-container" class="container" style="position: relative; background: white; box-shadow: 0 1px 16px silver; z-index: 2;">
       <div id="header" style="background: black; color: white; padding: 16px; margin-left: -15px; margin-right: -15px; margin-bottom: 15px;">
@@ -35,61 +35,20 @@
         </center>
         <br />
         <center>
-        <!--
-          <div id="filter_form">
-            <form id="form_92285" method="post" action="/group1/?type=Island&filt=city">
-              <div class="form_description">
-                <h2>Untitled Form</h2>
-                <p>This is your form description. Click here to edit.</p>
-              </div>						
-                <ul >
-                
-                    <li id="li_1" >
-              <label class="description" for="element_1">Search by name </label>
-              <div>
-                <input id="element_1" name="element_1" class="element text large" type="text" maxlength="255" value=""/> 
-              </div> 
-              </li>		<li id="li_3" >
-              <label class="description" for="element_3">Drop Down </label>
-              <div>
-              <select class="element select medium" id="element_3" name="element_3"> 
-                <option value="1" selected="selected">New York City</option>
-          <option value="2" >Queens</option>
-          <option value="3" >Long Island</option>
-
-              </select>
-              </div> 
-              </li>		<li id="li_2" >
-              <label class="description" for="element_2">Phone </label>
-              <span>
-                <input id="element_2_1" name="element_2_1" class="element text" size="3" maxlength="3" value="" type="text"> -
-                <label for="element_2_1">(###)</label>
-              </span>
-              <span>
-                <input id="element_2_2" name="element_2_2" class="element text" size="3" maxlength="3" value="" type="text"> -
-                <label for="element_2_2">###</label>
-              </span>
-              <span>
-                <input id="element_2_3" name="element_2_3" class="element text" size="4" maxlength="4" value="" type="text">
-                <label for="element_2_3">####</label>
-              </span>
-              
-              </li>
-                    <li class="buttons">
-                    <input type="hidden" name="form_id" value="92285" />
-                    
-                  <input id="saveForm" class="button_text" type="submit" name="submit" value="Submit" />
-              </li>
-                </ul>
-              </form>	
-          </div>
-        -->
-          <div class="btn-group">
-            <a role="button" class="btn btn-dark" href="?type=all&filt=city">Show All</a>
-            <a role="button" class="btn btn-dark" href="?type=York&filt=city">New York City</a>
-            <a role="button" class="btn btn-dark" href="?type=Queens&filt=city">Queens</a>
-            <a role="button" class="btn btn-dark" href="?type=Island&filt=city">Long Island</a>
-          </div>
+        <h3>Map Filters</h3>
+        <form id="filter_form" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">  
+          Search: <input type="text" id="searchString" name="search" value="">
+          <br><br>
+          City:
+          <input id="AllRadio" type="radio" name="city" value="All" checked>All
+          <input id="YorkRadio" type="radio" name="city" value="York">New York City
+          <input id="QueensRadio" type="radio" name="city" value="Queens">Queens
+          <input id="IslandRadio" type="radio" name="city" value="Island">Long Island
+          <br><br>
+          Zip Code: <input type="text" id="zipBox" name="zip" value="">
+          <br><br>
+          <input type="submit" name="submit" value="Submit">  
+        </form>
         </center>
       </div>
 
@@ -102,34 +61,52 @@
                 
                 <tbody>
                   <?php
-                    /*
-                    $queryPost = $_POST['query'];
-                    if($queryPost !== null) {
-                      echo("console.log('ok...');");
-                    }
-                    */
 
-                    $filt = $_GET['filt'];
-                    $que = $_GET['type'];
+                    $search = $_GET['search'];
+                    $que = $_GET['city'];
+                    $zip = $_GET['zip'];
+
+                    $had_city = true;
+                    $had_search  = true;
                     
-                    if ($filt == "city") {
-                      if ($que == "York") {
-                        $tablesquery = $db->query("SELECT * FROM 'THEATERS' WHERE \"field7\" = \"New York\";");
-                      } elseif ($que == "Queens") {
-                        $tablesquery = $db->query("SELECT * FROM 'THEATERS' WHERE \"field7\" = \"Queens\";");
-                      } elseif ($que == "Island") {
-                        $tablesquery = $db->query("SELECT * FROM 'THEATERS' WHERE \"field7\" = \"Long Island City\";");
-                      }  else {
-                        $tablesquery = $db->query("SELECT * FROM 'THEATERS';");
-                      }
-                    } elseif ($filt == "Distance") {
-                      echo("alert('distance placeholder')");
-                    } elseif ($filt == "Search") {
-                      echo("alert('search placeholder')");
-                    } else {                      
-                      // BAD FILTER TYPE - redirect to all filter
-                      echo('<script>window.location.assign("http://li1923-168.members.linode.com/group1/index.php?type=all&filt=city")</script>');
+                    $search_string = "SELECT * FROM 'THEATERS'";
+                    if ($que == "York") {
+                      $search_string.=" WHERE \"field7\" = \"New York\"";
+                    } elseif ($que == "Queens") {
+                      $search_string.=" WHERE \"field7\" = \"Queens\"";
+                    } elseif ($que == "Island") {
+                      $search_string.=" WHERE \"field7\" = \"Long Island City\"";
+                    }  else {
+                      $had_city = false;
                     }
+
+                    if($search) {
+                      if($had_city == false) {
+                        $search_string.=" WHERE ";
+                      } else {
+                        $search_string.=" AND ";
+                      }
+                      $search_string.="\"field2\" LIKE \"%$search%\";";
+                    } else {
+                      $had_search = false;
+                    }
+
+                    if($zip) {
+                      if(($had_city == false) && ($had_search == false)) {
+                        $search_string.=" WHERE ";
+                      } else {
+                        $search_string.=" AND ";
+                      }
+                      $search_string.="\"field8\" = \"$zip\";";
+                    }
+
+
+                    $tablesquery = $db->query($search_string);
+
+                    //else {                      
+                      // BAD FILTER TYPE - redirect to all filter
+                    //  echo('<script>window.location.assign("http://li1923-168.members.linode.com/group1/index.php?type=all&filt=city")</script>');
+                    //}
 
                     while ($table = $tablesquery->fetchArray(SQLITE3_ASSOC)) {
                       echo("<tr>");
@@ -213,13 +190,82 @@
         }
         map.setCenter({lat: (lat_sum/lats.length), lng: (lon_sum/lons.length)});
       }
+
+      // handle form stuff
+      var form = document.getElementById("filter_form"); 
+      function handleForm(event) { 
+        event.preventDefault();
+
+        let query = "http://li1923-168.members.linode.com/group1/index.php?";        
+
+        if(document.getElementById("AllRadio").checked){
+          query = `${query}city=All`;
+        } else if(document.getElementById("YorkRadio").checked){
+          query = `${query}city=York`;
+        } else if(document.getElementById("QueensRadio").checked){
+          query = `${query}city=Queens`;
+        } else if(document.getElementById("IslandRadio").checked){
+          query = `${query}city=Island`;
+        } else {
+          query = `${query}city=All`;
+        }
+
+        if (document.getElementById("searchString").value != ""){
+          query = `${query}&search=${document.getElementById("searchString").value}`
+        }
+        if (document.getElementById("zipBox").value != ""){
+          query = `${query}&zip=${document.getElementById("zipBox").value}`
+        }
+
+        window.location.assign(query);
+      } 
+      form.addEventListener('submit', handleForm);
+
+      function setInputFilter(textbox, inputFilter) {
+        ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
+          textbox.addEventListener(event, function() {
+            if (inputFilter(this.value)) {
+              this.oldValue = this.value;
+              this.oldSelectionStart = this.selectionStart;
+              this.oldSelectionEnd = this.selectionEnd;
+            } else if (this.hasOwnProperty("oldValue")) {
+              this.value = this.oldValue;
+              this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+            } else {
+              this.value = "";
+            }
+          });
+        });
+      }
+      // Allow digits and '.' only, using a RegExp
+      setInputFilter(document.getElementById("zipBox"), (value) => /^\d*\.?\d*$/.test(value));
+
+      // set value of form widgets equal to the url query params
+      var params = getUrlVars(window.location.href);
+      let keys = Object.keys(params);
+      if(keys.length > 0){
+        document.getElementById("zipBox").value = (keys.indexOf("zip") != -1) ? params["zip"] : "";        
+        document.getElementById("searchString").value = (keys.indexOf("search") != -1) ? params["search"] : "";
+        if(keys.indexOf("city") != -1){
+          document.getElementById(`${params["city"]}Radio`).checked = true;
+        }
+      }
+      // extract jsonified version of url query params
+      function getUrlVars(url) {
+          var hash;
+          var myJson = {};
+          var hashes = url.slice(url.indexOf('?') + 1).split('&');
+          for (var i = 0; i < hashes.length; i++) {
+              hash = hashes[i].split('=');
+              myJson[hash[0]] = hash[1];
+          }
+          return myJson;
+      }
       </script>
-      <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxT5l-Cdxyp4z0IvNCabKrZoTVgcdDtIs&callback=initMap">
-    </script>
+      <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxT5l-Cdxyp4z0IvNCabKrZoTVgcdDtIs&callback=initMap"></script>
     <footer class="page-footer font-small black">
       <div class="text-center py-3">
-        <a href="about.html">Credits</a>
+        <a href="about.html">About</a>
       </div>
     </footer>
   </body>
